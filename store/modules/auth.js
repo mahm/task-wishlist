@@ -24,7 +24,7 @@ export default {
   actions: {
     setAuth: ({ state, commit, dispatch }, payload) => {
       commit('setAuth', payload)
-      dispatch('user/prepareUser', state.data.uid, { root: true })
+      dispatch('user/prepareUser', payload.uid, { root: true })
     },
     signInWithGoogle: ({ commit }) => {
       return new Promise((resolve, reject) => {

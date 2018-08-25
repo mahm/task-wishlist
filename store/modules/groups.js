@@ -55,7 +55,8 @@ export default {
                 if (group.exists) {
                   const payload = {
                     id: group.id,
-                    name: group.data().name
+                    name: group.data().name,
+                    owner: group.data().owner
                   }
                   if (change.type === 'added') {
                     commit('add', payload)
@@ -74,8 +75,12 @@ export default {
         this.unsubscribe = null
       }
     },
-    add: ({ dispatch }, payload) => {
-      groupsRef.add(payload)
+    add: ({ dispatch, rootState }, payload) => {
+      const _payload = {
+        ...payload,
+        owner: usersRef.doc(rootState.auth.data.uid)
+      }
+      groupsRef.add(_payload)
         .then(doc => {
           dispatch('user/addParticipation', { groupRef: doc }, { root: true })
         })

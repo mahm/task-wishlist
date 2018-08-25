@@ -2,6 +2,7 @@ import { app } from '~/plugins/firebase'
 
 const db = app.firestore()
 const usersRef = db.collection('users')
+const groupsRef = db.collection('groups')
 const participationsRef = db.collection('participations')
 
 export default {
@@ -10,20 +11,23 @@ export default {
 
   state () {
     return {
-      id: null,
-      invitations: {}
+      id: null
     }
   },
   mutations: {
     init (state) {
       state.id = null
-      state.invitations = {}
     },
     setId (state, userId) {
       state.id = userId
     }
   },
   getters: {
+    uid: (state) => state.id,
+    isOwner: (state) => (group) => {
+      console.log(group.owner)
+      return group.owner.id === state.id
+    }
   },
   actions: {
     clear ({ commit }) {
@@ -36,35 +40,23 @@ export default {
         })
         .catch(e => console.log('user/prepareUser error: ', e))
     },
-    startListener ({ commit, dispatch }, payload) {
-      if (this.unsubscribe) {
-        console.warn('user/listener is running: ', this.unsubscribe)
-        this.unsubscribe()
-        this.unsubscribe = null
-      }
-      this.unsubscribe = usersRef.doc(payload.id).onSnapshot(doc => {
-        commit('set', {
-          id: doc.id,
-          participations: doc.data().participations,
-          invitations: doc.data().invitations
-        })
-        // participationsが更新されたらgroupsを再読込する
-        dispatch('groups/startListener', null, { root: true })
-      })
-    },
-    stopListener () {
-      if (this.unsubscribe) {
-        console.warn('user/listener is stopping: ', this.unsubscribe)
-        this.unsubscribe()
-        this.unsubscribe = null
-      }
-    },
     addParticipation ({ state }, payload) {
       participationsRef.add({ user: usersRef.doc(state.id), group: payload.groupRef })
         .then(() => {
           // nothing
         })
         .catch(e => console.log('user/addParticipation error: ', e))
+    },
+    inviteToGroup ({ state }, payload) {
+      const _payload = {
+        user: usersRef.doc(payload.uid),
+        group: groupsRef.doc(payload.groupId)
+      }
+      participationsRef.add(_payload)
+        .then(() => {
+          // nothing
+        })
+        .catch(e => console.log('user/inviteToGroup error: ', e))
     }
   }
 }

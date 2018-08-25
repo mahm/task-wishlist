@@ -21,11 +21,11 @@ import firebase from '~/plugins/firebase'
 
 export default {
   async mounted () {
-    let authData = await new Promise((resolve, reject) => {
+    const authData = await new Promise((resolve, reject) => {
       firebase.auth().onAuthStateChanged((authData) => resolve(authData || null))
     })
-    this.$store.dispatch('auth/setAuth', authData)
     if (authData) {
+      this.$store.dispatch('auth/setAuth', authData)
       this.$router.push('/')
     } else {
       this.$data.loading = false

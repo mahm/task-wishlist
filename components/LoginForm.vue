@@ -11,7 +11,7 @@
 export default {
   methods: {
     googleSignUp () {
-      this.$store.dispatch('signInWithGoogle')
+      this.$store.dispatch('auth/signInWithGoogle')
         .then(() => {
           console.log('sign in successful')
         })
