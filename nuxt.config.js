@@ -15,9 +15,14 @@ module.exports = {
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' }
     ]
   },
-  plugins: ['~/plugins/vuetify.js'],
+  plugins: [
+    '~/plugins/vuetify.js'
+  ],
   css: [
     '~/assets/style/app.styl'
+  ],
+  modules: [
+    '@nuxtjs/dotenv'
   ],
   /*
   ** Customize the progress bar color
@@ -44,5 +49,11 @@ module.exports = {
         })
       }
     }
+  },
+  /*
+  ** Router
+   */
+  router: {
+    middleware: 'authenticated'
   }
 }
