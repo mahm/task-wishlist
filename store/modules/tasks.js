@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { app } from '~/plugins/firebase'
 
 const db = app.firestore()
@@ -27,7 +28,7 @@ export default {
     set (state, payload) {
       const index = state.data.findIndex(task => task.id === payload.id)
       if (index !== -1) {
-        state.data[index] = payload
+        Vue.set(state.data, index, payload)
       }
     },
     remove (state, payload) {
@@ -59,7 +60,9 @@ export default {
             const payload = {
               id: change.doc.id,
               title: change.doc.data().title,
-              owner: change.doc.data().owner
+              owner: change.doc.data().owner,
+              done: change.doc.data().done,
+              doneBy: change.doc.data().doneBy
             }
             if (change.type === 'added') {
               commit('add', payload)
@@ -67,7 +70,7 @@ export default {
               commit('set', payload)
             } else if (change.type === 'removed') {
               commit('remove', payload)
-            }
+            }    
           })
         }, (e) => { console.error(e) })
     },
@@ -81,7 +84,7 @@ export default {
     add ({ state, rootGetters }, payload) {
       const _payload = {
         title: payload.title,
-        owner: rootGetters['user/userRef']
+        owner: rootGetters['user/data']
       }
       groupsRef.doc(state.groupId).collection('tasks').add(_payload)
         .then(doc => {
@@ -89,12 +92,23 @@ export default {
         })
         .catch(e => console.log('tasks/add error: ', e))
     },
-    delete ({ commit, state }, payload) {
+    delete ({ state }, payload) {
       groupsRef.doc(state.groupId).collection('tasks').doc(payload.id).delete()
         .then(() => {
           // nothing
         })
         .catch(e => console.log('tasks/delete error: ', e))
+    },
+    done ({ state, rootGetters }, payload) {
+      const _payload = {
+        done: true,
+        doneBy: rootGetters['user/data']
+      }
+      groupsRef.doc(state.groupId).collection('tasks').doc(payload.id).set(_payload, { merge: true })
+        .then(() => {
+          // nothing
+        })
+        .catch(e => console.log('tasks/done error: ', e))
     }
   }
 }

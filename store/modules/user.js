@@ -11,19 +11,30 @@ export default {
 
   state () {
     return {
-      id: null
+      id: null,
+      name: '',
+      photoURL: ''
     }
   },
   mutations: {
     init (state) {
       state.id = null
     },
-    setId (state, userId) {
-      state.id = userId
+    setUserData (state, payload) {
+      state.id = payload.uid
+      state.name = payload.name
+      state.photoURL = payload.photoURL
     }
   },
   getters: {
     uid: (state) => state.id,
+    data: (state) => { 
+      return {
+        id: state.id,
+        name: state.name,
+        photoURL: state.photoURL
+      }
+    },
     isOwner: (state) => (obj) => {
       return obj.owner.id === state.id
     },
@@ -33,10 +44,10 @@ export default {
     clear ({ commit }) {
       commit('init')
     },
-    prepareUser ({ commit }, userId) {
-      usersRef.doc(userId).set({}, { merge: true })
+    prepareUser ({ commit }, payload) {
+      usersRef.doc(payload.uid).set(payload, { merge: true })
         .then((doc) => {
-          commit('setId', userId)
+          commit('setUserData', payload)
         })
         .catch(e => console.log('user/prepareUser error: ', e))
     },
