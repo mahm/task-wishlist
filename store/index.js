@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import auth from './modules/auth'
+import groups from './modules/groups'
 import user from './modules/user'
-import * as actions from './actions'
-import * as getters from './getters'
 import createLogger from 'vuex/dist/logger'
 
 Vue.use(Vuex)
@@ -12,9 +12,7 @@ Vue.config.debug = debug
 
 const createStore = () => {
   return new Vuex.Store({
-    modules: { user },
-    actions,
-    getters,
+    modules: { auth, groups, user },
     strict: false,
     plugins: debug ? [createLogger()] : []
   })

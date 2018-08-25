@@ -18,15 +18,14 @@
 <script>
 import LoginForm from '~/components/LoginForm'
 import firebase from '~/plugins/firebase'
-import { mapActions } from 'vuex'
 
 export default {
   async mounted () {
-    let user = await new Promise((resolve, reject) => {
-      firebase.auth().onAuthStateChanged((user) => resolve(user))
+    let authData = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((authData) => resolve(authData || null))
     })
-    this.setUser(user)
-    if (user) {
+    this.$store.dispatch('auth/setAuth', authData)
+    if (authData) {
       this.$router.push('/')
     } else {
       this.$data.loading = false
@@ -36,11 +35,6 @@ export default {
     return {
       loading: true
     }
-  },
-  methods: {
-    ...mapActions([
-      'setUser'
-    ])
   },
   components: {
     LoginForm
