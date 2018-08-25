@@ -24,8 +24,8 @@ export default {
   },
   getters: {
     uid: (state) => state.id,
-    isOwner: (state) => (group) => {
-      return group.owner.id === state.id
+    isOwner: (state) => (obj) => {
+      return obj.owner.id === state.id
     },
     userRef: (state) => usersRef.doc(state.id)
   },

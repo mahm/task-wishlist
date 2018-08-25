@@ -18,7 +18,7 @@
           <v-card-actions>
             <v-btn color="blue darken-1" flat>やったよ！</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="red darken-1" flat>削除</v-btn>
+            <v-btn color="red darken-1" flat v-if="isOwner(task)" @click="deleteTask(task)">削除</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -64,6 +64,15 @@ export default {
         this.$data.snackbar.show = true
         this.$data.snackbar.text = "新しいタスクを登録しました"
       })
+    },
+    deleteTask (task) {
+      this.$store.dispatch('tasks/delete', { id: task.id }).then(() => {
+        this.$data.snackbar.show = true
+        this.$data.snackbar.text = "タスクを削除しました"
+      })
+    },
+    isOwner (task) {
+      return this.$store.getters['user/isOwner'](task)
     }
   }
 }
