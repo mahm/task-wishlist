@@ -1,7 +1,7 @@
 export const user = (state) => {
-  return state.user
+  return state.user.data
 }
 
 export const isAuthenticated = (state) => {
-  return Object.keys(state.user).length
+  return Object.keys(state.user.data).length
 }

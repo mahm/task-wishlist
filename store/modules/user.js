@@ -1,8 +1,10 @@
-const state = {}
+const state = {
+  data: {}
+}
 
 const mutations = {
   setUser (state, payload) {
-    state = payload
+    state.data = payload
   }
 }
 

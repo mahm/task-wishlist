@@ -1,6 +1,6 @@
 import { auth, GoogleAuthProvider } from '~/plugins/firebase'
 
-export const autoSignIn = ({ commit }, payload) => {
+export const setUser = ({ commit }, payload) => {
   commit('setUser', payload)
 }
 
