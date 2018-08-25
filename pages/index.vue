@@ -36,7 +36,7 @@
             <h2>{{group.name}}</h2>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="blue darken-1" flat>もっと見る</v-btn>
+            <v-btn color="blue darken-1" flat @click="linkToTasks(group.id)">もっと見る</v-btn>
             <v-spacer></v-spacer>
             <div v-if="isOwner(group)">
               <v-btn color="blue darken-1" flat @click="openInviteDialog(group)">UIDで招待</v-btn>
@@ -124,6 +124,9 @@ export default {
     },
     isOwner (group) {
       return this.$store.getters['user/isOwner'](group)
+    },
+    linkToTasks (groupId) {
+      this.$router.push(`/groups/${groupId}`)
     }
   },
   computed: {

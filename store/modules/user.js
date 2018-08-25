@@ -25,9 +25,9 @@ export default {
   getters: {
     uid: (state) => state.id,
     isOwner: (state) => (group) => {
-      console.log(group.owner)
       return group.owner.id === state.id
-    }
+    },
+    userRef: (state) => usersRef.doc(state.id)
   },
   actions: {
     clear ({ commit }) {
